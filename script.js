@@ -5,10 +5,12 @@ const pokemonOne = document.querySelector('.pokemonOne')
 const backCards = Array.from(document.querySelectorAll('.backCard'))
 const next = document.querySelector('.next')
 const previous = document.querySelector('.previous')
+const page = document.querySelector('.currentPage');
 let localDataBase = ['empty'];
 let pokemonsFetchesSoFar = 0;
 let currentPage = 0;
 let c = pokemonsFetchesSoFar; // counter
+let allPages = [];
 
 async function fetchPokemons() {
     let pokemonsFetched = [];
@@ -18,13 +20,11 @@ async function fetchPokemons() {
         pokemonsFetched.push(await (await fetch(API + c)).json());
     }
     localDataBase.push(pokemonsFetched);
-    console.log(localDataBase)
     return pokemonsFetched
 }
 
-
 async function domUpdate(fn, direction) {
-    const page = document.querySelector('.currentPage');
+
     if (direction === 'next') {
         currentPage++;
     } else if (direction === 'previous' && currentPage > 1) {
@@ -32,11 +32,11 @@ async function domUpdate(fn, direction) {
     } else {
         return;
     }
-    page.innerHTML = currentPage;
+
     if (currentPage >= localDataBase.length) {
         await fn();
     }
-    const pokemonsFetched = localDataBase;
+
     pokemonOne.innerHTML = ` <img src="${localDataBase[currentPage][1].sprites.other.dream_world.front_default}"
     alt="${localDataBase[currentPage][1].name}">
     <div class="imgOverlay"></div>
@@ -45,14 +45,21 @@ async function domUpdate(fn, direction) {
     <div class="info">${localDataBase[currentPage][1].name.toUpperCase()}</div>`;
     backCards[0].innerHTML = `<img src="${localDataBase[currentPage][0].sprites.other.dream_world.front_default}"><div class="shineEffect"></div><div class="imgOverlay"></div><div class="name">${localDataBase[currentPage][0].name.toUpperCase()}</div>`;
     backCards[1].innerHTML = `<img src="${localDataBase[currentPage][2].sprites.other.dream_world.front_default}"><div class="shineEffect"></div><div class="imgOverlay"></div><div class="name">${localDataBase[currentPage][2].name.toUpperCase()}</div>`;
-    const test = await (await fetch("https://pokeapi.co/api/v2/pokemon-species/2/")).json();
-    console.log(test)
+
+    nav = () => {
+        const pagesHTML = localDataBase.toSpliced(0, 1).map((_, i) => `<span class="num${(i+1)}">${i + 1}</span>`)
+        page.innerHTML = `<p>${currentPage}</p><div class='restNav'><p>${pagesHTML}</p></div`;
+        allPages = document.querySelectorAll('p span')
+        allPages.forEach((p, i) => {
+            p.addEventListener('click', () => {
+                console.log(i);
+            })
+        })
+    }
+    nav();
 }
 
-
-
-async function buttonsEventListeners() {
-
+async function eventListeners() {
     next.addEventListener('click', async () => {
         await domUpdate(fetchPokemons, 'next');
     });
@@ -64,13 +71,10 @@ async function buttonsEventListeners() {
         if (e.key === 'ArrowRight') await domUpdate(fetchPokemons, 'next');
         else if (e.key === 'ArrowLeft') await domUpdate(fetchPokemons, 'previous');
     })
-
-
 }
-
-
 //visual functions: 
-function hoverEffect() {
+function hoverEffects() {
+    const restNav = document.querySelector('.restNav')
     const emptyBox = document.querySelector('.box-needed-for-event-mouseleave-in-eventlistener')
     main.addEventListener('mouseenter', () => {
 
@@ -84,10 +88,7 @@ function hoverEffect() {
 
 
 }
-
-
-
 //execution: 
 domUpdate(fetchPokemons, 'next');
-hoverEffect();
-buttonsEventListeners();
+hoverEffects();
+eventListeners();
