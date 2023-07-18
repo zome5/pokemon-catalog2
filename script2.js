@@ -1,3 +1,5 @@
+'use strict'
+
 const API = 'https://pokeapi.co/api/v2/pokemon/'
 const wrapper = document.querySelector('wrapper')
 const main = document.querySelector('main')
