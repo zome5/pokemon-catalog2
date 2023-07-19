@@ -29,7 +29,7 @@ async function fetchPokemons() {
     }
     localDataBase.push(pokemonsFetched);
     return pokemonsFetched
-}
+async function domUpdate(callback, direction) {
 
 async function domUpdate(fn, direction) {
 
