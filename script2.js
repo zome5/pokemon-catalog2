@@ -52,9 +52,9 @@ async function domUpdate(fn, direction) {
         const pagesHTML = localDataBase.toSpliced(0, 1).map((_, i) => `<span class="num${(i+1)}">${i + 1}</span>`)
         page.innerHTML = `<p>${currentPage}</p><div class='restNav'><p>${pagesHTML}</p></div`;
         allPages = document.querySelectorAll('p span')
-        allPages.forEach((p, i) => {
-            p.addEventListener('click', () => {
-                console.log(i);
+        allPages.forEach((page, idx) => {
+            page.addEventListener('click', () => {
+                console.log(idx);
             })
         })
     }
