@@ -12,7 +12,7 @@ const localDataBase = ['empty'];
 let pokemonsFetchesSoFar = 0;
 let currentPage = 0;
 let c = pokemonsFetchesSoFar; // counter
-let allPages = [];
+const allPages = [];
 
 async function fetchPokemons() {
     let pokemonsFetched = [];
