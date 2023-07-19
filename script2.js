@@ -16,7 +16,14 @@ const allPages = [];
 async function fetchPokemons() {
     const pokemonsFetched = [];
 
-    for (let i = 0; i < 3; i++) {
+        try {
+            const response = await fetch(API + c)
+            const pokemonData = await response.json()
+            pokemonsFetched.push(pokemonData);
+        } catch (error) {
+            alert(error.message)
+            throw new Error(error.message)
+        }
         c++
         pokemonsFetched.push(await (await fetch(API + c)).json());
     }
