@@ -74,8 +74,8 @@ async function eventListeners() {
 
     previous.addEventListener('click', async () => {
         await domUpdate(fetchPokemons, 'previous');
-    });
-    window.addEventListener('keydown', async (e) => {
+        if (e.key === 'ArrowRight') { await domUpdate(fetchPokemons, 'next'); }
+        else if (e.key === 'ArrowLeft') { await domUpdate(fetchPokemons, 'previous'); }
         if (e.key === 'ArrowRight') await domUpdate(fetchPokemons, 'next');
         else if (e.key === 'ArrowLeft') await domUpdate(fetchPokemons, 'previous');
     })
