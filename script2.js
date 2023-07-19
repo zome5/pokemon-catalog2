@@ -14,7 +14,7 @@ let c = pokemonsFetchesSoFar; // counter
 const allPages = [];
 
 async function fetchPokemons() {
-    let pokemonsFetched = [];
+    const pokemonsFetched = [];
 
     for (let i = 0; i < 3; i++) {
         c++
