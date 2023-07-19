@@ -94,9 +94,10 @@ function hoverEffects() {
         })
     })
 
-
-}
-//execution: 
-domUpdate(fetchPokemons, 'next');
+//execution:
+(async () => {
+await domUpdate(fetchPokemons, 'next');
 hoverEffects();
+eventListeners();
+})()
 eventListeners();
