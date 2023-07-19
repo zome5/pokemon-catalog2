@@ -10,7 +10,6 @@ const previous = document.querySelector('.previous')
 const page = document.querySelector('.currentPage');
 const localDataBase = ['empty'];
 let pokemonsFetchesSoFar = 0;
-let currentPage = 0;
 let c = pokemonsFetchesSoFar; // counter
 const allPages = [];
 
