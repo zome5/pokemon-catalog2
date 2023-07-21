@@ -1,30 +1,35 @@
-const API = 'https://pokeapi.co/api/v2/pokemon/'
-const wrapper = document.querySelector('wrapper')
-const main = document.querySelector('main')
-const pokemonOne = document.querySelector('.pokemonOne')
-const backCards = Array.from(document.querySelectorAll('.backCard'))
-const next = document.querySelector('.next')
-const previous = document.querySelector('.previous')
-const page = document.querySelector('.currentPage');
-let localDataBase = ['empty'];
+// const main = document.querySelector('main')
+
+const body = document.querySelector('body')
+
+const localDataBase = [];
 let pokemonsFetchesSoFar = 0;
 let currentPage = 0;
-let c = pokemonsFetchesSoFar; // counter
-let allPages = [];
 
-async function fetchPokemons() {
+async function fetchPokemons(numOfFetches) {
+    const wrapper = document.querySelector('.wrapper')
+    const API = 'https://pokeapi.co/api/v2/pokemon/'
     let pokemonsFetched = [];
-
-    for (let i = 0; i < 3; i++) {
-        c++
-        pokemonsFetched.push(await (await fetch(API + c)).json());
+    try {
+        for (let i = 0; i < numOfFetches; i++) {
+            pokemonsFetchesSoFar++
+            const request = await fetch(API + pokemonsFetchesSoFar);
+            const result = await request.json();
+            pokemonsFetched.push(result);
+        }
+        localDataBase.push(pokemonsFetched);
+        return pokemonsFetched
+    } catch (error) {
+        wrapper.style.display = 'none'
+        const woodenDoorImg = createHtmlEl('img', undefined, undefined, 'closeddoor.png')
+        body.appendChild(woodenDoorImg)
+        body.classList.add('catch')
+        body.innerHTML += '<p>Request error. Check your internet connection or contact our support<p>'
+        console.log('ERROR: ', error);
     }
-    localDataBase.push(pokemonsFetched);
-    return pokemonsFetched
 }
 
-async function domUpdate(fn, direction) {
-
+async function domUpdate(callback, direction) {
     if (direction === 'next') {
         currentPage++;
     } else if (direction === 'previous' && currentPage > 1) {
@@ -34,32 +39,54 @@ async function domUpdate(fn, direction) {
     }
 
     if (currentPage >= localDataBase.length) {
-        await fn();
+        await callback(3);
     }
 
-    pokemonOne.innerHTML = ` <img src="${localDataBase[currentPage][1].sprites.other.dream_world.front_default}"
-    alt="${localDataBase[currentPage][1].name}">
-    <div class="imgOverlay"></div>
-    <div class="shineEffect"></div>
-    <div class="name">${localDataBase[currentPage][1].name.toUpperCase()}</div>
-    <div class="info">${localDataBase[currentPage][1].name.toUpperCase()}</div>`;
-    backCards[0].innerHTML = `<img src="${localDataBase[currentPage][0].sprites.other.dream_world.front_default}"><div class="shineEffect"></div><div class="imgOverlay"></div><div class="name">${localDataBase[currentPage][0].name.toUpperCase()}</div>`;
-    backCards[1].innerHTML = `<img src="${localDataBase[currentPage][2].sprites.other.dream_world.front_default}"><div class="shineEffect"></div><div class="imgOverlay"></div><div class="name">${localDataBase[currentPage][2].name.toUpperCase()}</div>`;
+    createMain();
 
-    nav = () => {
-        const pagesHTML = localDataBase.toSpliced(0, 1).map((_, i) => `<span class="num${(i+1)}">${i + 1}</span>`)
-        page.innerHTML = `<p>${currentPage}</p><div class='restNav'><p>${pagesHTML}</p></div`;
-        allPages = document.querySelectorAll('p span')
-        allPages.forEach((p, i) => {
-            p.addEventListener('click', () => {
-                console.log(i);
-            })
-        })
-    }
-    nav();
+    createNav();
 }
 
-async function eventListeners() {
+
+
+
+function createMain() {
+    const cardWrapper = document.querySelector('.cardWrapper')
+
+    const currentArrayOfPokemons = localDataBase[currentPage - 1]
+    const getPokemonImg = (indx) => currentArrayOfPokemons[indx].sprites.other.dream_world.front_default
+    const getPokemonName = (indx) => currentArrayOfPokemons[indx].name.toUpperCase()
+    cardWrapper.innerHTML = '';
+
+    currentArrayOfPokemons.forEach((_, i) => {
+        const cardinnerHTML = `<img src="${getPokemonImg(i)}">
+        <div class="shineEffect"/></div>
+        <div class="imgOverlay"/></div>
+        <div class="name">${getPokemonName(i)}</div>`
+        const card = createHtmlEl('div', 'card', cardinnerHTML, undefined)
+        cardWrapper.appendChild(card);
+    })
+}
+
+function createNav() {
+    const currentPageNum = document.querySelector('.numOfActivePageInNav');
+    currentPageNum.innerHTML = currentPage
+    const restNavEl = createHtmlEl('div', 'restNav')
+
+    currentPageNum.appendChild(restNavEl);
+    for (let i = 0; i < localDataBase.length; i++) {
+        const singeNumInsideNav = createHtmlEl('span', `num${(i+1)}`, i + 1)
+        restNavEl.appendChild(singeNumInsideNav)
+    }
+
+
+}
+
+
+async function eventListeners()
+ {
+    const next = document.querySelector('.next')
+const previous = document.querySelector('.previous')
     next.addEventListener('click', async () => {
         await domUpdate(fetchPokemons, 'next');
     });
@@ -67,28 +94,61 @@ async function eventListeners() {
     previous.addEventListener('click', async () => {
         await domUpdate(fetchPokemons, 'previous');
     });
-    window.addEventListener('keydown', async (e) => {
-        if (e.key === 'ArrowRight') await domUpdate(fetchPokemons, 'next');
-        else if (e.key === 'ArrowLeft') await domUpdate(fetchPokemons, 'previous');
+    window.addEventListener('keydown', async ({
+        key
+    }) => {
+        if (key === 'ArrowRight') {
+            await domUpdate(fetchPokemons, 'next')
+        } else if (key === 'ArrowLeft') {
+            await domUpdate(fetchPokemons, 'previous')
+        }
     })
 }
-//visual functions: 
+
 function hoverEffects() {
-    const restNav = document.querySelector('.restNav')
-    const emptyBox = document.querySelector('.box-needed-for-event-mouseleave-in-eventlistener')
-    main.addEventListener('mouseenter', () => {
+    const pokeBall = document.querySelector('.pokeBall')
+    const cardWrapper = document.querySelector('.cardWrapper')
+    pokeBall.addEventListener('mouseover', (e) => {
+        e.stopPropagation()
+        pokeBall.style.top = '0'
+        pokeBall.style.opacity = '0'
+        cardWrapper.style.opacity = '1';
 
-        backCards[0].classList.add('activeBackCard1');
-        backCards[1].classList.add('activeBackCard2');
-        emptyBox.addEventListener('mouseleave', () => {
-            backCards[0].classList.remove('activeBackCard1');
-            backCards[1].classList.remove('activeBackCard2');
-        })
+    })
+    body.addEventListener('mouseleave', (e) => {
+        e.stopPropagation()
+        cardWrapper.style.opacity = '0';
+        pokeBall.style.opacity = '1'
+        pokeBall.style.top = '30%';
+        console.log('hi')
+
     })
 
-
 }
-//execution: 
-domUpdate(fetchPokemons, 'next');
-hoverEffects();
-eventListeners();
+function createHtmlEl(type, klasa, content, source) {
+
+    const element = document.createElement(type)
+    if (klasa !== undefined) {
+        element.classList.add(klasa)
+    }
+
+    if (content !== undefined) {
+        element.innerHTML = content
+    }
+    if (type === 'img') {
+        if (typeof source === 'function') {
+            element.src = "";
+            element.src = source()
+        } else {
+            element.src = source
+        }
+    }
+
+    return element
+}
+
+(async () => {
+    await domUpdate(fetchPokemons, 'next');
+    hoverEffects();
+    eventListeners();
+})();
