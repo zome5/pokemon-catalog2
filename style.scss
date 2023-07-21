@@ -16,7 +16,12 @@ body {
     background-size: cover;
     background-position: bottom;
     font-family: Helvetica, sans-serif;
-
+.backgroud{
+ 
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(#00000015, #00000093);
+}
     .wrapper {
         display: flex;
         justify-content: center;

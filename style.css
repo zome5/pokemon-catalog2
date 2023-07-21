@@ -23,8 +23,13 @@ body .wrapper {
   width: 100%;
   height: 100%;
   max-width: 1440px;
-  background: radial-gradient(rgba(0, 0, 0, 0.0823529412), rgba(0, 0, 0, 0.5764705882));
 }
+.background{ 
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(#00000015, #00000093);}
 body .wrapper main {
   display: flex;
   width: 100vw;
