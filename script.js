@@ -1,7 +1,4 @@
-// const main = document.querySelector('main')
-
 const body = document.querySelector('body')
-
 const localDataBase = [];
 let pokemonsFetchesSoFar = 0;
 let currentPage = 0;
@@ -47,9 +44,6 @@ async function domUpdate(callback, direction) {
     createNav();
 }
 
-
-
-
 function createMain() {
     const cardWrapper = document.querySelector('.cardWrapper')
 
@@ -78,15 +72,11 @@ function createNav() {
         const singeNumInsideNav = createHtmlEl('span', `num${(i+1)}`, i + 1)
         restNavEl.appendChild(singeNumInsideNav)
     }
-
-
 }
 
-
-async function eventListeners()
- {
+async function eventListeners(){
     const next = document.querySelector('.next')
-const previous = document.querySelector('.previous')
+    const previous = document.querySelector('.previous')
     next.addEventListener('click', async () => {
         await domUpdate(fetchPokemons, 'next');
     });
@@ -94,9 +84,7 @@ const previous = document.querySelector('.previous')
     previous.addEventListener('click', async () => {
         await domUpdate(fetchPokemons, 'previous');
     });
-    window.addEventListener('keydown', async ({
-        key
-    }) => {
+    window.addEventListener('keydown', async ({key}) => {
         if (key === 'ArrowRight') {
             await domUpdate(fetchPokemons, 'next')
         } else if (key === 'ArrowLeft') {
@@ -108,22 +96,11 @@ const previous = document.querySelector('.previous')
 function hoverEffects() {
     const pokeBall = document.querySelector('.pokeBall')
     const cardWrapper = document.querySelector('.cardWrapper')
-    pokeBall.addEventListener('mouseover', (e) => {
-        e.stopPropagation()
+    pokeBall.addEventListener('mouseover', () => {
         pokeBall.style.top = '0'
         pokeBall.style.opacity = '0'
         cardWrapper.style.opacity = '1';
-
     })
-    body.addEventListener('mouseleave', (e) => {
-        e.stopPropagation()
-        cardWrapper.style.opacity = '0';
-        pokeBall.style.opacity = '1'
-        pokeBall.style.top = '30%';
-        console.log('hi')
-
-    })
-
 }
 function createHtmlEl(type, klasa, content, source) {
 
