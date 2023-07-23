@@ -217,6 +217,9 @@ body.catch {
   justify-content: center;
   align-items: center;
 }
+body.catch .background {
+  position: fixed;
+}
 body.catch img {
   height: 90vh;
 }
@@ -232,6 +235,47 @@ body.catch p {
   transform: rotate(-2.3deg);
 }
 
+.loading {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 27%;
+  width: 120px;
+  height: 120px;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 100px;
+  border: 30px solid rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+.loading .loadingArm {
+  position: absolute;
+  top: -50%;
+  height: 120px;
+  width: 20px;
+  background-color: rgba(255, 250, 250, 0);
+  animation: loading;
+  transform: rotate(-90000deg);
+  animation-duration: 45s;
+  animation-iteration-count: infinite;
+  animation-play-state: running;
+}
+.loading .loadingLine {
+  position: absolute;
+  transform: translateY(8px);
+  height: 15px;
+  width: 25px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0px 15px 5px white;
+}
+
+@keyframes loading {
+  100% {
+    transform: rotate(360deg);
+  }
+}
 @keyframes pulse {
   0% {
     transform: scale(1);
