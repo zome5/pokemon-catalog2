@@ -42,7 +42,6 @@ currentPage = direction;
     } else {
         return;
     }
-
     if (currentPage >= localDataBase.length) {
         const loadingKontent = '<div class="loadingArm"><div class="loadingLine"></div></div>'
         const loading = createHtmlEl('div', 'loading', loadingKontent, undefined)
@@ -54,13 +53,11 @@ currentPage = direction;
     }
 
     imgsUpdate();
-
     createNav();
 }
 
 function imgsUpdate() {
     const currentArrayOfPokemons = localDataBase[currentPage - 1]
-
     const getPokemonImg = (indx) => currentArrayOfPokemons[indx].sprites.other.dream_world.front_default
     const getPokemonName = (indx) => currentArrayOfPokemons[indx].name.toUpperCase()
     cardWrapper.innerHTML = '';
@@ -122,7 +119,6 @@ function hoverEffect() {
     })
 }
 function createHtmlEl(type, klasa, content, source) {
-
     const element = document.createElement(type)
     if (klasa !== undefined) {
         element.classList.add(klasa)
